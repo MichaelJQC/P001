@@ -1,0 +1,40 @@
+# Excluir todo de target/
+target/
+
+# Incluir maven-wrapper.jar y target/ dentro de src/main/ y src/test/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# IntelliJ IDEA
+.idea
+*.iws
+*.iml
+*.ipr
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# VS Code
+.vscode/
+
+# Otros archivos generados por tu proyecto o IDE
+HELP.md
+
+# Puedes añadir más exclusiones según las necesidades de tu proyecto
