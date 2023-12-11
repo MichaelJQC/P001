@@ -13,13 +13,12 @@ public class ControllerUtil {
     public final static String CRUD_NUEVO = "NUEVO";
     public final static String CRUD_EDITAR = "EDITAR";
     public final static String CRUD_ELIMINAR = "ELIMINAR";
-
+    public final static String CRUD_RESTAURAR = "RESTAURAR";
 
     public static void responseJson(HttpServletResponse response, String data) {
         try {
             PrintWriter out = response.getWriter();
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json; charset=UTF-8");
             out.print(data);
             out.flush();
         } catch (Exception e) {

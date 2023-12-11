@@ -1,10 +1,13 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-         pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+
 <!DOCTYPE html>
 
 <html>
 <head>
     <meta charset="ISO-8859-1">
+    <meta charset="UTF-8">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
 
@@ -16,8 +19,17 @@
 <jsp:include page="shared/navbar.jsp"></jsp:include>
 
 <div class="container">
+    <div class="mb-3">
+        <label for="searchInput" class="form-label">Buscar:</label>
+        <input type="text" class="form-control" id="searchInput" placeholder="Ingrese tÃ©rmino de bÃºsqueda">
+    </div>
 
     <h1>GESTION DE PRODUCTOS</h1>
+    <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="toggleSwitch">
+        <label class="form-check-label" for="toggleSwitch">Mostrar Inactivos</label>
+    </div>
+
 
     <!-- LISTADO DE PRODUCTOS -->
     <div class="card" id="divResultado">
@@ -26,9 +38,8 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th>ID</th>
                     <th>NOMBRE</th>
-                    <th>CÓDIGO</th>
+                    <th>CÃ“DIGO</th>
                     <th>CANTIDAD</th>
                     <th>PRECIO</th>
                     <th>CATEGORIA</th>
@@ -42,10 +53,10 @@
         </div>
     </div>
 
-    <!-- BOTÓN NUEVO -->
+    <!-- BOTÃ“N NUEVO -->
     <button type="button" class="btn btn-success" id="controlBtnNuevo" >Nuevo Producto</button>
 
-    <!-- MODAL DE EDICIÓN -->
+    <!-- MODAL DE EDICIÃ“N -->
     <div class="modal fade" id="modalEdicion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -54,50 +65,51 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="formProducto" >
                         <input type="hidden" id="accion" name="accion">
                         <div class="row mb-3">
                             <label for="frmId" class="col-sm-2 col-form-label">ID</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="frmId" disabled="disabled" value="0">
+                                <input type="text" class="form-control" id="frmId" name="product_id" readonly="readonly" value="0">
+
                             </div>
                         </div>
                         <div class="row mb-3">
                             <label for="frmNombre" class="col-sm-2 col-form-label">Nombre</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="frmNombre">
+                                <input type="text" class="form-control" id="frmNombre" name="nombre">
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="frmCodigo" class="col-sm-2 col-form-label">Código</label>
+                            <label for="frmCodigo" class="col-sm-2 col-form-label">CÃ³digo</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="frmCodigo">
+                                <input type="text" class="form-control" id="frmCodigo" name="codigo">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <label for="frmCantidad" class="col-sm-2 col-form-label">Cantidad</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="frmCantidad">
+                                <input type="text" class="form-control" id="frmCantidad" name="cantidad">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <label for="frmPrecio" class="col-sm-2 col-form-label">Precio</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="frmPrecio">
+                                <input type="text" class="form-control" id="frmPrecio" name="precio">
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="frmCategoria" class="col-sm-2 col-form-label">Categoría</label>
+                            <label for="frmCategoria" class="col-sm-2 col-form-label">CategorÃ­a</label>
                             <div class="col-sm-10">
-                                <select class="form-control" id="frmCategoria">
-                                    <!-- Las opciones se llenarán dinámicamente al consultar las categorías -->
+                                <select class="form-control" id="frmCategoria" name="categoria_id">
+                                    <!-- Las opciones se llenarÃ¡n dinÃ¡micamente al consultar las categorÃ­as -->
                                 </select>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <label for="frmEstado" class="col-sm-2 col-form-label">Estado</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" disabled="disabled" id="frmEstado" value="A">
+                                <input type="text" class="form-control" disabled="disabled" id="frmEstado" name="active" value="A">
                             </div>
                         </div>
                     </form>
@@ -109,6 +121,7 @@
             </div>
         </div>
     </div>
+
 
 </div>
 

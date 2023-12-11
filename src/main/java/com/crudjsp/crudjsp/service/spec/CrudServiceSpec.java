@@ -1,12 +1,12 @@
 package com.crudjsp.crudjsp.service.spec;
 
-import com.crudjsp.crudjsp.model.Producto;
 import java.util.List;
 
 public interface CrudServiceSpec<T> {
 
-    List<T> getAll();
-    T getForId(String id);
+    List<T> getAllActive();
+    List<T> getAllInactive();
+    T getForId(int id);
 
     List<T> get(T bean);
 
@@ -14,6 +14,6 @@ public interface CrudServiceSpec<T> {
 
     void update(T bean);
 
-    void delete(String id);
-
+    void delete(int id);
+    void restore(int id);
 }
