@@ -19,10 +19,6 @@
 <jsp:include page="shared/navbar.jsp"></jsp:include>
 
 <div class="container">
-    <div class="mb-3">
-        <label for="searchInput" class="form-label">Buscar:</label>
-        <input type="text" class="form-control" id="searchInput" placeholder="Ingrese término de búsqueda">
-    </div>
 
     <h1>GESTION DE PRODUCTOS</h1>
     <div class="form-check form-switch">

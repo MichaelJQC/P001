@@ -25,7 +25,7 @@
                     <a class="nav-link text-white" href="producto.jsp">Productos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Clientes</a>
+                    <a class="nav-link text-white" href="person.jsp">Clientes</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" href="#">Ventas</a>

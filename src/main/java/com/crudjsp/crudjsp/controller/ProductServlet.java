@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 
-@WebServlet({ "/productos/activos", "/productos/inactivos", "/categorias" , "/procesar", "/eliminar", "/restaurar" , "/buscar"})
+@WebServlet({ "/productos/activos", "/productos/inactivos", "/categorias" , "/procesar", "/eliminar", "/restaurar"})
 public class ProductServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private ProductService productService = new ProductService();
@@ -45,22 +45,9 @@ public class ProductServlet extends HttpServlet {
                 case "/restaurar":
                     restaurar(request, response);
                     break;
-                case "/buscar":
-                    buscarProductos(request, response);
-                    break;
             }
         }
-    private void buscarProductos(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            String searchTerm = request.getParameter("searchTerm");
-            List<Product> products = productService.searchProducts(searchTerm);
-            Gson gson = new Gson();
-            String jsonData = gson.toJson(products);
-            ControllerUtil.responseJson(response, jsonData);
-        } catch (Exception e) {
-            ControllerUtil.responseJson(response, "Hubo un error al realizar la búsqueda. Por favor, inténtalo nuevamente.");
-        }
-    }
+
 
         private void eliminar(HttpServletRequest request, HttpServletResponse response) {
             try {
