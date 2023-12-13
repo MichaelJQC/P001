@@ -117,7 +117,7 @@
                                 <select class="form-control" id="frmCategoria" name="categoria_id" required>
                                     <option value="" selected disabled>Seleccionar una categoría</option>
 
-                                    <!-- ... (Your existing options) ... -->
+                                    <!-- ... (Your existing options) . -->
                                 </select>
                                 <div class="error-mensaje" id="errorCategoria"></div>
                             </div>
