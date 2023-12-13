@@ -1,5 +1,6 @@
 package producto;
 
+import com.crudjsp.crudjsp.model.Brand;
 import com.crudjsp.crudjsp.model.Category;
 import com.crudjsp.crudjsp.model.Product;
 import com.crudjsp.crudjsp.service.ProductService;
@@ -12,17 +13,7 @@ public class Crear {
         ProductService productService = new ProductService();
 
         // Crear un nuevo producto
-        Product nuevoProduct = new Product();
-        nuevoProduct.setProductName("Nuevo Producto 2");
-        nuevoProduct.setPrice(1322L);
-        nuevoProduct.setStockQuantity(50);
-        nuevoProduct.setPrice(99.99);
-        nuevoProduct.setActive('A');
-
-        // Crear una instancia de Categoria y establecerla en el producto
-        Category category = new Category();
-        category.setCategoryId(1); // Suponiendo un ID de categoría válido
-        nuevoProduct.setCategory(category);
+        Product nuevoProduct = getProduct();
 
         // Insertar el nuevo producto
         productService.insert(nuevoProduct);
@@ -36,5 +27,25 @@ public class Crear {
 
         // Imprimir el objeto en formato JSON
         System.out.println("Producto en formato JSON:\n" + productoJson);
+    }
+
+    private static Product getProduct() {
+        Product nuevoProduct = new Product();
+        nuevoProduct.setProductName("Nuevo Producto 2");
+        nuevoProduct.setPrice(1322L);
+        nuevoProduct.setCodeProduct("12345TREWQ");
+        nuevoProduct.setStockQuantity(50);
+        nuevoProduct.setPrice(99.99);
+        nuevoProduct.setActive('A');
+
+        // Crear una instancia de Categoria y establecerla en el producto
+        Category category = new Category();
+        category.setCategoryId(1); // Suponiendo un ID de categoría válido
+        nuevoProduct.setCategory(category);
+
+        Brand brand = new Brand();
+        brand.setBrandId(1); // Suponiendo un ID de categoría válido
+        nuevoProduct.setBrand(brand);
+        return nuevoProduct;
     }
 }
