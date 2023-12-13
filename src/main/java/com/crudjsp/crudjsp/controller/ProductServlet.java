@@ -1,7 +1,9 @@
 package com.crudjsp.crudjsp.controller;
 
+import com.crudjsp.crudjsp.model.Brand;
 import com.crudjsp.crudjsp.model.Category;
 import com.crudjsp.crudjsp.model.Product;
+import com.crudjsp.crudjsp.service.BrandService;
 import com.crudjsp.crudjsp.service.CategoryService;
 import com.crudjsp.crudjsp.service.ProductService;
 import com.google.gson.Gson;
@@ -17,11 +19,12 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 
-@WebServlet({ "/productos/activos", "/productos/inactivos", "/categorias" , "/procesar", "/eliminar", "/restaurar"})
+@WebServlet({ "/productos/activos", "/productos/inactivos", "/categorias" , "/procesar", "/eliminar", "/restaurar" , "/marcas"})
 public class ProductServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private ProductService productService = new ProductService();
     private CategoryService categoryService = new CategoryService();
+    private BrandService brandService = new BrandService();
 
         protected void service(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException {
@@ -35,6 +38,9 @@ public class ProductServlet extends HttpServlet {
                     break;
                 case "/categorias":
                     listarCategorias(request, response);
+                    break;
+                case "/marcas":
+                    listarMarcas(request, response);
                     break;
                 case "/procesar":
                     procesar(request, response);
@@ -90,6 +96,12 @@ public class ProductServlet extends HttpServlet {
         String jsonData = gson.toJson(categories);
         ControllerUtil.responseJson(resp, jsonData);
     }
+    protected void listarMarcas(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<Brand> brands = brandService.getAllActive();
+        Gson gson = new Gson();
+        String jsonData = gson.toJson(brands);
+        ControllerUtil.responseJson(resp, jsonData);
+    }
 
     private void procesar(HttpServletRequest request, HttpServletResponse response) {
         // Datos
@@ -106,6 +118,9 @@ public class ProductServlet extends HttpServlet {
         category.setCategoryId(Integer.parseInt(request.getParameter("categoryId")));
         bean.setCategory(category);
 
+        Brand brand = new Brand();
+        brand.setBrandId(Integer.parseInt(request.getParameter("brandId")));
+        bean.setBrand(brand);
         // Proceso
         try {
             switch (accion) {

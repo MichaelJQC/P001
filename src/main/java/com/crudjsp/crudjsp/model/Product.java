@@ -10,6 +10,7 @@ public class Product {
     private double price;
     private String codeProduct;
     private Category category;
+    private Brand brand;
     private int stockQuantity;
     private char active;
 }

@@ -3,7 +3,8 @@ let arreglo = [];
 
 // Arreglo de categorías
 let categorias = [];
-
+// Arreglo de marcas
+let marcas = [];
 // Constantes del CRUD
 const ACCION_NUEVO = "NUEVO";
 const ACCION_EDITAR = "EDITAR";
@@ -17,6 +18,7 @@ let frmPrecio = document.getElementById("frmPrecio");
 let frmCodigo = document.getElementById("frmCodigo");
 let frmCantidad = document.getElementById("frmCantidad");
 let frmCategoria = document.getElementById("frmCategoria");
+let frmMarca = document.getElementById("frmMarca");
 let frmEstado = document.getElementById("frmEstado");
 
 // Variables para los botones
@@ -41,6 +43,7 @@ window.onload = function () {
 function fnControlBtnConsultar() {
     let urlProductosActivos = "/crud/productos/activos";
     let urlCategorias = "/crud/categorias"; // Ajusta la URL según tu endpoint correcto
+    let urlMarcas = "/crud/marcas"; // Ajusta la URL según tu endpoint correcto
 
     // Proceso con AJAX para obtener productos
     let xhttpProductos = new XMLHttpRequest();
@@ -55,7 +58,22 @@ function fnControlBtnConsultar() {
             xhttpCategorias.onreadystatechange = function () {
                 if (this.readyState === 4 && this.status === 200) {
                     categorias = JSON.parse(this.responseText);
-                    mostrarDatosEnTabla();
+
+                    // Proceso con AJAX para obtener marcas
+                    let xhttpMarcas = new XMLHttpRequest();
+                    xhttpMarcas.open("GET", urlMarcas, true);
+                    xhttpMarcas.onreadystatechange = function () {
+                        if (this.readyState === 4 && this.status === 200) {
+                            marcas = JSON.parse(this.responseText);
+
+
+                            llenarMarcas(null, marcas);
+
+
+                            mostrarDatosEnTabla();
+                        }
+                    };
+                    xhttpMarcas.send();
                 }
             };
             xhttpCategorias.send();
@@ -64,7 +82,11 @@ function fnControlBtnConsultar() {
     xhttpProductos.send();
 }
 
+
 function fnControlBtnNuevo() {
+
+    // Restablecer el formulario al abrir el modal
+    document.getElementById("formProducto").reset();
     let tituloRegistro = document.getElementById("exampleModalLabel");
     if (tituloRegistro) {
         tituloRegistro.innerHTML = ACCION_NUEVO + " PRODUCTO";
@@ -87,10 +109,39 @@ function fnControlBtnNuevo() {
     }
 }
 
+
 function fnBtnProcesar() {
+    // Elimina la clase 'was-validated' al hacer clic en el botón
+    document.getElementById("formProducto").classList.remove('was-validated');
+
+    // Validación del campo Nombre
+    let nombreValido = validarNombre();
+    if (!nombreValido) {
+        return;
+    }
+
+    // Validación del campo Código
+    let codigoValido = validarCodigo();
+    if (!codigoValido) {
+        return;
+    }
+
+    // Validación del campo Precio
+    let precioValido = validarPrecio();
+    if (!precioValido) {
+        return;
+    }
+
+    // Validación del campo Cantidad
+    let cantidadValida = validarCantidad();
+    if (!cantidadValida) {
+        return;
+    }
+
     if (!fnValidar()) {
         return;
     }
+
 
     // Preparar los datos
     let datos = "accion=" + accion.value;
@@ -100,6 +151,7 @@ function fnBtnProcesar() {
     datos += "&amount=" + frmCantidad.value;
     datos += "&price=" + frmPrecio.value;
     datos += "&categoryId=" + frmCategoria.value;
+    datos += "&brandId=" + frmMarca.value;
     datos += "&active=" + frmEstado.value;
 
     let xhttp = new XMLHttpRequest();
@@ -127,11 +179,11 @@ function fnBtnProcesar() {
                 });
             } else {
                 // Mostrar mensaje de error con SweetAlert2
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Hubo un error en el proceso. Por favor, inténtalo nuevamente.',
-                });
+                // Swal.fire({
+                //     icon: 'error',
+                //     title: 'Error',
+                //     text: 'Hubo un error en el proceso. Por favor, inténtalo nuevamente.',
+                // });
             }
         }
     };
@@ -139,10 +191,13 @@ function fnBtnProcesar() {
 }
 function fnEstadoFormulario(esNuevo) {
     frmId.disabled = esNuevo;
+    frmId.value = 0;
     frmNombre.value = "";
     frmCodigo.value = "";
     frmCantidad.value = "";
     frmPrecio.value = "";
+    frmCategoria.value = "";
+    frmMarca.value = "";
     frmEstado.value = "A";
 }
 
@@ -160,6 +215,7 @@ function mostrarDatosEnTabla() {
         detalleTabla += "<td>" + item.price + "</td>";
         detalleTabla += "<td>" + item.stockQuantity + "</td>";
         detalleTabla += "<td>" + item.category.categoryName + "</td>";
+        detalleTabla += "<td>" + item.brand.brandName + "</td>";
         detalleTabla += "<td>" + item.active + "</td>";
         detalleTabla += "<td>";
 
@@ -209,6 +265,7 @@ function fnEditar(productId) {
 
         // Llenar las opciones del campo de categoría y establecer el valor
         llenarCategorias(registro.category.categoryId, categorias);
+        llenarMarcas(registro.brand.brandId, marcas);
 
         // Asegúrate de que el modal se haya inicializado correctamente antes de mostrarlo
         let modalEdicionElement = document.getElementById('modalEdicion');
@@ -236,6 +293,20 @@ function llenarCategorias(selectedCategoriaId, categorias) {
     });
 
     selectCategoria.value = selectedCategoriaId;
+}
+function llenarMarcas(selectedMarcaId, marcas) {
+    let selectMarca = document.getElementById("frmMarca");
+
+    selectMarca.innerHTML = "";
+
+    marcas.forEach(marca => {
+        let option = document.createElement("option");
+        option.value = marca.brandId;
+        option.text = marca.brandName;
+        selectMarca.appendChild(option);
+    });
+
+    selectMarca.value = selectedMarcaId;
 }
 window.onload = function () {
     fnControlBtnConsultar();
@@ -341,3 +412,122 @@ function fnRestaurar(productId) {
     xhttpRestaurar.send("productId=" + productId);
 }
 
+//validaciones
+// Función de validación genérica
+// Función de validación genérica
+function validarCampo(valor, campo, mensajeError) {
+    let errorElement = document.getElementById("error" + campo);
+    if (valor.trim() === "") {
+        errorElement.innerText = mensajeError;
+        errorElement.style.display = "block";  // Mostrar mensaje de error
+        return false;
+    } else {
+        errorElement.innerText = "";
+        errorElement.style.display = "none";  // Ocultar mensaje de error
+        return true;
+    }
+}
+
+// Validación específica para el campo de nombre
+function validarNombre() {
+    console.log("Validando nombre...");
+    let nombre = frmNombre.value;
+    return validarCampo(nombre, "Nombre", "El campo es requerido");
+}
+// Validación del campo Código
+function validarCodigo() {
+    let codigo = frmCodigo.value.trim();
+    return validarCampo(codigo, "Codigo", "El campo es requerido") &&
+        validarFormatoCodigo(codigo);
+}
+
+// Validación del campo Precio
+function validarPrecio() {
+    let precio = frmPrecio.value.trim();
+    return validarCampo(precio, "Precio", "El campo es requerido") &&
+        validarFormatoNumerico(precio, "Precio");
+}
+
+// Validación del campo Cantidad
+function validarCantidad() {
+    let cantidad = frmCantidad.value.trim();
+    return validarCampo(cantidad, "Cantidad", "El campo es requerido") &&
+        validarEnteroPositivo(cantidad, "Cantidad");
+}
+
+// Función de validación genérica
+function validarCampo(valor, campo, mensajeError) {
+    let errorElement = document.getElementById("error" + campo);
+    if (valor === "") {
+        errorElement.innerText = mensajeError;
+        errorElement.style.display = "block";  // Mostrar mensaje de error
+        return false;
+    } else {
+        errorElement.innerText = "";
+        errorElement.style.display = "none";  // Ocultar mensaje de error
+        return true;
+    }
+}
+
+// Funciones específicas para validar el formato
+function validarFormatoCodigo(codigo) {
+    // Validar que el código contenga solo números y letras y tenga entre 1 y 10 caracteres
+    if (!/^[a-zA-Z0-9]{1,10}$/.test(codigo)) {
+        mostrarError("Codigo", "El código debe contener solo números y letras, y tener entre 1 y 10 caracteres");
+        return false;
+    }
+    return true;
+}
+
+function validarFormatoNumerico(valor, campo) {
+    // Validar que el valor sea un número válido
+    if (isNaN(parseFloat(valor)) || !isFinite(valor)) {
+        mostrarError(campo, "El " + campo.toLowerCase() + " debe ser un valor numérico válido");
+        return false;
+    }
+    return true;
+}
+
+function validarEnteroPositivo(valor, campo) {
+    // Validar que el valor sea un número entero positivo válido
+    if (!/^\d+$/.test(valor)) {
+        mostrarError(campo, "La " + campo.toLowerCase() + " debe ser un número entero positivo");
+        return false;
+    }
+    return true;
+}
+
+function mostrarError(campo, mensajeError) {
+    let errorElement = document.getElementById("error" + campo);
+    errorElement.innerText = mensajeError;
+    errorElement.style.display = "block";  // Mostrar mensaje de error
+}
+
+
+// Validación específica para el campo de categoría
+function validarCategoria() {
+    let categoria = frmCategoria.value;
+    return validarCampo(categoria, "Categoria", "Debes seleccionar una categoría");
+}
+
+// Validación específica para el campo de marca
+function validarMarca() {
+    let marca = frmMarca.value;
+    return validarCampo(marca, "Marca", "Debes seleccionar una marca");
+}
+
+// Event listener para el botón de enviar
+btnProcesar.addEventListener("click", function () {
+    // Ejecutar las funciones de validación
+    let esNombreValido = validarNombre();
+    let esCodigoValido = validarCodigo();
+    let esPrecioValido = validarPrecio();
+    let esCantidadValida = validarCantidad();
+    let esCategoriaValida = validarCategoria();
+    let esMarcaValida = validarMarca();
+
+    // Si todas las validaciones son exitosas, procesa los datos
+    if (esNombreValido && esCodigoValido && esPrecioValido && esCantidadValida && esCategoriaValida && esMarcaValida /* Agrega otras validaciones si es necesario */) {
+        // Procesar datos
+    }
+});

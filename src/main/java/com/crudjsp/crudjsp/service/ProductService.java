@@ -2,6 +2,7 @@ package com.crudjsp.crudjsp.service;
 
 
 import com.crudjsp.crudjsp.db.AccesoDB;
+import com.crudjsp.crudjsp.model.Brand;
 import com.crudjsp.crudjsp.model.Category;
 import com.crudjsp.crudjsp.model.Product;
 import com.crudjsp.crudjsp.service.spec.CrudServiceSpec;
@@ -15,13 +16,23 @@ import java.util.List;
 
 public class ProductService implements CrudServiceSpec<Product>, RowMapper<Product> {
     // Definiendo cosas
-    private final String SQL_SELECT_BASE_ACTIVE = "SELECT p.*, c.category_name FROM PRODUCT as p INNER JOIN CATEGORY as c ON (p.category_id = c.category_id) WHERE p.active = 'A' ORDER BY p.product_id ASC";
+    private final String SQL_SELECT_BASE_ACTIVE =
+            "SELECT p.*, c.category_name, b.brand_name " +
+                    "FROM PRODUCT as p " +
+                    "INNER JOIN CATEGORY as c ON (p.category_id = c.category_id) " +
+                    "INNER JOIN BRAND as b ON (p.brand_id = b.brand_id) " +
+                    "WHERE p.active = 'A' ORDER BY p.product_id ASC";
 
-    private final String SQL_SELECT_BASE_INACTIVE = "SELECT p.*, c.category_name FROM PRODUCT as p INNER JOIN CATEGORY as c ON (p.category_id = c.category_id) WHERE p.active = 'I' ORDER BY p.product_id ASC";
+    private final String SQL_SELECT_BASE_INACTIVE =
+            "SELECT p.*, c.category_name, b.brand_name " +
+                    "FROM PRODUCT as p " +
+                    "INNER JOIN CATEGORY as c ON (p.category_id = c.category_id) " +
+                    "INNER JOIN BRAND as b ON (p.brand_id = b.brand_id) " +
+                    "WHERE p.active = 'I' ORDER BY p.product_id ASC";
 
-    private final String SQL_INSERT = "INSERT INTO PRODUCT (product_name, price, code_product , stock_quantity, category_id, active) VALUES (?, ? ,  ?, ?, ?, ?)";
+    private final String SQL_INSERT = "INSERT INTO PRODUCT (product_name, price, code_product , stock_quantity, category_id, brand_id  , active) VALUES (?, ? ,  ?, ?, ? , ?, ?)";
 
-    private final String SQL_UPDATE = "UPDATE PRODUCT SET product_name=?, price=?,  code_product =?, stock_quantity=?, active=?, category_id=? WHERE product_id=?";
+    private final String SQL_UPDATE = "UPDATE PRODUCT SET product_name=?, price=?,  code_product =?, stock_quantity=?, active=?, category_id=? , brand_id=?  WHERE product_id=?";
     private final String SQL_DELETE_LOGICAL = "UPDATE PRODUCT SET active = 'I' WHERE product_id=?";
 
     private final String SQL_RESTORE = "UPDATE PRODUCT SET active = 'A' WHERE product_id=?";
@@ -176,12 +187,13 @@ public class ProductService implements CrudServiceSpec<Product>, RowMapper<Produ
 
             // Insertar nuevo producto
             pstm = cn.prepareStatement(SQL_INSERT);
-            pstm.setString(1, bean.getProductName()); // Cambiar a getProductName()
+            pstm.setString(1, bean.getProductName());
             pstm.setDouble(2, bean.getPrice());
             pstm.setString(3, bean.getCodeProduct());
             pstm.setLong(4, bean.getStockQuantity());
-            pstm.setLong(5, bean.getCategory().getCategoryId()); // Cambiar a getCategoryId()
-            pstm.setString(6, String.valueOf(bean.getActive()));
+            pstm.setLong(5, bean.getCategory().getCategoryId());
+            pstm.setLong(6, bean.getBrand().getBrandId());
+            pstm.setString(7, String.valueOf(bean.getActive()));
             pstm.executeUpdate();
             pstm.close();
 
@@ -299,8 +311,9 @@ public class ProductService implements CrudServiceSpec<Product>, RowMapper<Produ
             pstm.setString(3, bean.getCodeProduct());
             pstm.setLong(4, bean.getStockQuantity());
             pstm.setString(5, String.valueOf(bean.getActive()));
-            pstm.setLong(6, bean.getCategory().getCategoryId()); // Cambiar a getCategoryId()
-            pstm.setLong(7, bean.getProductId()); // Cambiar a getProductId()
+            pstm.setLong(6, bean.getCategory().getCategoryId());
+            pstm.setLong(7, bean.getBrand().getBrandId());
+            pstm.setLong(8, bean.getProductId());
             pstm.executeUpdate();
             pstm.close();
 
@@ -338,9 +351,15 @@ public class ProductService implements CrudServiceSpec<Product>, RowMapper<Produ
         category.setCategoryId(rs.getInt("category_id"));
         category.setCategoryName(rs.getString("category_name"));
         category.setActive(String.valueOf(rs.getString("active").charAt(0)));
-
-        // Establecer la categoría en el producto
         bean.setCategory(category);
+
+        // Crear y configurar la marca
+        Brand brand = new Brand();
+        brand.setBrandId(rs.getInt("brand_id"));
+        brand.setBrandName(rs.getString("brand_name"));
+        brand.setActive(String.valueOf(rs.getString("active").charAt(0)));
+        // Establecer la categoría en el producto
+        bean.setBrand(brand);
 
         bean.setStockQuantity(rs.getInt("stock_quantity"));
         bean.setActive(rs.getString("active").charAt(0));

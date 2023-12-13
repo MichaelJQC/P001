@@ -16,7 +16,4 @@ public class Person {
     private String email;
     private char active;
 
-    private Department department;
-    private Province province;
-    private District district;
 }

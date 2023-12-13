@@ -1,11 +1,7 @@
 package com.crudjsp.crudjsp.service;
 
 import com.crudjsp.crudjsp.db.AccesoDB;
-
-import com.crudjsp.crudjsp.model.Department;
-import com.crudjsp.crudjsp.model.District;
-
-import com.crudjsp.crudjsp.model.Province;
+import com.crudjsp.crudjsp.model.Brand;
 import com.crudjsp.crudjsp.service.spec.CrudServiceSpec;
 import com.crudjsp.crudjsp.service.spec.RowMapper;
 
@@ -16,25 +12,26 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DistrictService implements CrudServiceSpec<District>, RowMapper<District> {
+public class BrandService implements CrudServiceSpec<Brand>, RowMapper<Brand> {
 
-    private final String SQL_SELECT_BASE = "SELECT P.province_id, P.province_name, DT.district_id, DT.district_name FROM PROVINCE P JOIN DISTRICT DT ON DT.district_id = DT.district_id ORDER BY P.province_id ASC;";
+    private final String SQL_SELECT_BASE = "SELECT * FROM BRAND order by brand_id ASC";
+
     @Override
-    public List<District> getAllActive() {
+    public List<Brand> getAllActive() {
         // Variables
         Connection cn = null;
-        List<District> lista = new ArrayList<>();
+        List<Brand> lista = new ArrayList<>();
         PreparedStatement pstm = null;
         ResultSet rs = null;
-        District d;
+        Brand b;
         // Proceso
         try {
             cn = AccesoDB.getConnection();
             pstm = cn.prepareStatement(SQL_SELECT_BASE);
             rs = pstm.executeQuery();
             while (rs.next()) {
-                d = mapRow(rs);
-                lista.add(d);
+                b = mapRow(rs);
+                lista.add(b);
             }
             rs.close();
             pstm.close();
@@ -49,29 +46,28 @@ public class DistrictService implements CrudServiceSpec<District>, RowMapper<Dis
         return lista;
     }
 
-
     @Override
-    public List<District> getAllInactive() {
+    public List<Brand> getAllInactive() {
         return null;
     }
 
     @Override
-    public District getForId(int id) {
+    public Brand getForId(int id) {
         return null;
     }
 
     @Override
-    public List<District> get(District bean) {
+    public List<Brand> get(Brand bean) {
         return null;
     }
 
     @Override
-    public void insert(District bean) {
+    public void insert(Brand bean) {
 
     }
 
     @Override
-    public void update(District bean) {
+    public void update(Brand bean) {
 
     }
 
@@ -86,15 +82,11 @@ public class DistrictService implements CrudServiceSpec<District>, RowMapper<Dis
     }
 
     @Override
-    public District mapRow(ResultSet rs) throws SQLException {
-        District bean = new District();
-        bean.setDistrictId(rs.getInt("district_id"));
-        bean.setDistrictName(rs.getString("district_name"));
-
-        // Configuración de relaciones
-        Province province = new Province();
-        province.setProvinceId(rs.getInt("province_id"));
-        bean.setProvince(province);
+    public Brand mapRow(ResultSet rs) throws SQLException {
+        Brand bean = new Brand();
+        bean.setBrandId(rs.getInt("brand_id"));
+        bean.setBrandName(rs.getString("brand_name"));
+        bean.setActive(rs.getString("active"));
         return bean;
     }
 }

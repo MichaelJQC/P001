@@ -139,9 +139,7 @@ public class PersonService implements CrudServiceSpec<Person>, RowMapper<Person>
             pstm.setString(6, bean.getNumberDocument());
             pstm.setString(7, bean.getGender());
             pstm.setString(8, bean.getEmail());
-            pstm.setInt(9, bean.getDepartment().getDepartmentId());
-            pstm.setInt(10, bean.getProvince().getProvinceId());
-            pstm.setInt(11, bean.getDistrict().getDistrictId());
+
             pstm.executeUpdate();
             pstm.close();
 
@@ -186,9 +184,7 @@ public class PersonService implements CrudServiceSpec<Person>, RowMapper<Person>
             pstm.setString(6, bean.getNumberDocument());
             pstm.setString(7, bean.getGender());
             pstm.setString(8, bean.getEmail());
-            pstm.setInt(9, bean.getDepartment().getDepartmentId());
-            pstm.setInt(10, bean.getProvince().getProvinceId());
-            pstm.setInt(11, bean.getDistrict().getDistrictId());
+
             pstm.setInt(12, bean.getPersonId());
             pstm.executeUpdate();
             pstm.close();
@@ -266,21 +262,7 @@ public class PersonService implements CrudServiceSpec<Person>, RowMapper<Person>
         bean.setGender(rs.getString("gender"));
         bean.setEmail(rs.getString("email"));
 
-        // Configuración de relaciones
-        Department department = new Department();
-        department.setDepartmentId(rs.getInt("department_id"));
-        department.setDepartmentName(rs.getString("department_name"));
-        bean.setDepartment(department);
 
-        Province province = new Province();
-        province.setProvinceId(rs.getInt("province_id"));
-        province.setProvinceName(rs.getString("province_name"));
-        bean.setProvince(province);
-
-        District district = new District();
-        district.setDistrictId(rs.getInt("district_id"));
-        district.setDistrictName(rs.getString("district_name"));
-        bean.setDistrict(district);
         bean.setActive(rs.getString("active").charAt(0));
         return bean;
     }

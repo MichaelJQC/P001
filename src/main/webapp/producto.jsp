@@ -15,7 +15,15 @@
 </head>
 
 <body>
+<style>
+    .error-mensaje {
+        color: red;
+        font-size: 14px;
+        margin-top: 5px;
+    }
 
+
+</style>
 <jsp:include page="shared/navbar.jsp"></jsp:include>
 
 <div class="container">
@@ -39,6 +47,7 @@
                     <th>CANTIDAD</th>
                     <th>PRECIO</th>
                     <th>CATEGORIA</th>
+                    <th>MARCA</th>
                     <th>ESTADO</th>
                     <th>ACCIONES</th>
                 </tr>
@@ -61,7 +70,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="formProducto" >
+                    <form id="formProducto" class="needs-validation" novalidate>
                         <input type="hidden" id="accion" name="accion">
                         <div class="row mb-3">
                             <label for="frmId" class="col-sm-2 col-form-label">ID</label>
@@ -73,35 +82,55 @@
                         <div class="row mb-3">
                             <label for="frmNombre" class="col-sm-2 col-form-label">Nombre</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="frmNombre" name="nombre">
+                                <input type="text" class="form-control" id="frmNombre" name="nombre" required>
+                                <div class="error-mensaje" id="errorNombre"></div>
                             </div>
                         </div>
+
                         <div class="row mb-3">
                             <label for="frmCodigo" class="col-sm-2 col-form-label">Código</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="frmCodigo" name="codigo">
+                                <input type="text" class="form-control" id="frmCodigo" name="codigo" pattern="[a-zA-Z0-9]{10}" title="Solo letras y números, 10 caracteres exactos" required>
+                                <div class="error-mensaje" id="errorCodigo"></div>
                             </div>
                         </div>
+
                         <div class="row mb-3">
                             <label for="frmCantidad" class="col-sm-2 col-form-label">Cantidad</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="frmCantidad" name="cantidad">
+                                <input type="text" class="form-control" id="frmCantidad" name="cantidad" pattern="[0-9]+" title="Solo números" required>
+                                <div class="error-mensaje" id="errorCantidad"></div>
                             </div>
                         </div>
+
                         <div class="row mb-3">
                             <label for="frmPrecio" class="col-sm-2 col-form-label">Precio</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="frmPrecio" name="precio">
+                                <input type="text" class="form-control" id="frmPrecio" name="precio" pattern="[0-9]+" title="Solo números" required>
+                                <div class="error-mensaje" id="errorPrecio"></div>
                             </div>
                         </div>
+
                         <div class="row mb-3">
                             <label for="frmCategoria" class="col-sm-2 col-form-label">Categoría</label>
                             <div class="col-sm-10">
-                                <select class="form-control" id="frmCategoria" name="categoria_id">
-                                    <!-- Las opciones se llenarán dinámicamente al consultar las categorías -->
+                                <select class="form-control" id="frmCategoria" name="categoria_id" required>
+                                    <!-- ... (Your existing options) ... -->
                                 </select>
+                                <div class="error-mensaje" id="errorCategoria"></div>
                             </div>
                         </div>
+
+                        <div class="row mb-3">
+                            <label for="frmMarca" class="col-sm-2 col-form-label">Marca</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="frmMarca" name="marca_id" required>
+                                    <!-- ... (Your existing options) ... -->
+                                </select>
+                                <div class="error-mensaje" id="errorMarca"></div>
+                            </div>
+                        </div>
+
                         <div class="row mb-3">
                             <label for="frmEstado" class="col-sm-2 col-form-label">Estado</label>
                             <div class="col-sm-10">
