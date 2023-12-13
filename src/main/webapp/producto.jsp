@@ -115,6 +115,8 @@
                             <label for="frmCategoria" class="col-sm-2 col-form-label">Categoría</label>
                             <div class="col-sm-10">
                                 <select class="form-control" id="frmCategoria" name="categoria_id" required>
+                                    <option value="" selected disabled>Seleccionar una categoría</option>
+
                                     <!-- ... (Your existing options) ... -->
                                 </select>
                                 <div class="error-mensaje" id="errorCategoria"></div>
@@ -125,6 +127,8 @@
                             <label for="frmMarca" class="col-sm-2 col-form-label">Marca</label>
                             <div class="col-sm-10">
                                 <select class="form-control" id="frmMarca" name="marca_id" required>
+                                    <option value="" selected disabled>Seleccionar una marca</option>
+
                                     <!-- ... (Your existing options) ... -->
                                 </select>
                                 <div class="error-mensaje" id="errorMarca"></div>

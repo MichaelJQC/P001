@@ -84,7 +84,6 @@ function fnControlBtnConsultar() {
 
 
 function fnControlBtnNuevo() {
-
     // Restablecer el formulario al abrir el modal
     document.getElementById("formProducto").reset();
     let tituloRegistro = document.getElementById("exampleModalLabel");
@@ -103,13 +102,12 @@ function fnControlBtnNuevo() {
         let modalEdicion = new bootstrap.Modal(modalEdicionElement);
         modalEdicion.show();
         // Llenar las opciones del campo de categoría y establecer el valor para un nuevo producto
-        llenarCategorias(null, categorias);
+        llenarCategorias(null); // Cambiado aquí
+        llenarMarcas(null); // Cambiado aquí
     } else {
         console.error("Elemento con ID 'modalEdicion' no encontrado.");
     }
 }
-
-
 function fnBtnProcesar() {
     // Elimina la clase 'was-validated' al hacer clic en el botón
     document.getElementById("formProducto").classList.remove('was-validated');
@@ -264,8 +262,8 @@ function fnEditar(productId) {
         frmEstado.value = registro.active;
 
         // Llenar las opciones del campo de categoría y establecer el valor
-        llenarCategorias(registro.category.categoryId, categorias);
-        llenarMarcas(registro.brand.brandId, marcas);
+        llenarCategorias(registro.category.categoryId); // Cambiado aquí
+        llenarMarcas(registro.brand.brandId); // Cambiado aquí
 
         // Asegúrate de que el modal se haya inicializado correctamente antes de mostrarlo
         let modalEdicionElement = document.getElementById('modalEdicion');
@@ -279,7 +277,6 @@ function fnEditar(productId) {
         console.error("Registro no encontrado con ID: " + productId);
     }
 }
-
 function llenarCategorias(selectedCategoriaId, categorias) {
     let selectCategoria = document.getElementById("frmCategoria");
 
